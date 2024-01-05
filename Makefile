@@ -23,7 +23,8 @@ PRECOMP_GCH     := $(PRECOMP_HDRS:.h=.h.gch)
 DEFINES         :=
 INCLUDES        := -Isource/include -Iexternal
 
-OUTPUT_BIN      := build/lc
+OUTPUT_DIR      := build
+OUTPUT_BIN      := lc
 
 .PHONY: all clean build output_headers
 .PRECIOUS: $(PRECOMP_GCH)
@@ -34,10 +35,11 @@ all: build
 test: build
 	@$(OUTPUT_BIN)
 
-build: $(OUTPUT_BIN)
+build: $(OUTPUT_DIR)/$(OUTPUT_BIN)
 
-$(OUTPUT_BIN): $(CXXOBJ) $(UTF8PROC_OBJS)
+$(OUTPUT_DIR)/$(OUTPUT_BIN): $(CXXOBJ) $(UTF8PROC_OBJS) 
 	@echo "  $(notdir $@)"
+	@mkdir -p $(OUTPUT_DIR)
 	@$(CXX) $(CXXFLAGS) $(WARNINGS) $(DEFINES) -Iexternal -o $@ $^
 
 %.cpp.o: %.cpp Makefile $(PRECOMP_GCH)
@@ -53,11 +55,11 @@ $(OUTPUT_BIN): $(CXXOBJ) $(UTF8PROC_OBJS)
 	@$(CXX) $(CXXFLAGS) $(WARNINGS) $(INCLUDES) -x c++-header -o $@ $<
 
 clean:
-	-@find source -iname "*.cpp.d" | xargs rm
-	-@find source -iname "*.cpp.o" | xargs rm
-	-@find build -iname "*.a" | xargs rm
-	-@rm $(PRECOMP_GCH)
-	-@rm $(OUTPUT_BIN)
+	-@find source -iname "*.cpp.d" | xargs rm 2>/dev/null || true
+	-@find source -iname "*.cpp.o" | xargs rm 2>/dev/null || true
+	-@find build -iname "*.a" | xargs rm 2>/dev/null || true
+	-@rm $(PRECOMP_GCH) 2>/dev/null || true
+	-@rm $(OUTPUT_DIR)/$(OUTPUT_BIN) 2>/dev/null || true
 
 -include $(CXXDEPS)
 -include $(CDEPS)
