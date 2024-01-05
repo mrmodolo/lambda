@@ -42,14 +42,16 @@ static void int_highlight(State &st, const Expr *expr, std::string &top,
                           std::string &bot, bool combine = false,
                           bool omit_lambda_parens = false) {
   bool pop = false;
-  bool match = false;
+  // bool match = false;
 
   std::string under;
   if (auto u = st.pred(expr); u.has_value())
-    match = true, pop = true, under = *u, st.ulines.push_back(*u);
+    // match = true, pop = true, under = *u, st.ulines.push_back(*u);
+    pop = true, under = *u, st.ulines.push_back(*u);
 
   else if (st.ulines.size() > 0)
-    match = true, under = st.ulines.back();
+    // match = true, under = st.ulines.back();
+    under = st.ulines.back();
 
   else
     under = " ";
