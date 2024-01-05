@@ -9,6 +9,8 @@
 *.log
 *.obj
 
+.cache/*
+
 !build/
 
 build/*
